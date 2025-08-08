@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mythic Builder Portal - README Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the retro-terminal aesthetic */
+        body {
+            font-family: 'Inter', monospace;
+            background-color: #0d0d0d;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+    max-width: 90%;
+    width: 100%;
+    padding: 2rem;
+    border: 2px solid #ffcc00;
+    box-shadow: 0 0 15px #00ff00, 0 0 25px #ffcc00;
+    border-radius: 12px;
+    background-color: rgba(13, 13, 13, 0.9);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+h1 {
+    color: #ffcc00;
+    text-shadow: 0 0 5px #ffcc00;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.chat-window {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #00ffff;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.chat-message {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    animation: neon-flicker 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes neon-flicker {
+    from { text-shadow: 0 0 2px #00ff00, 0 0 5px #00ff00; }
+    to { text-shadow: 0 0 4px #00ff00, 0 0 8px #00ff00, 0 0 12px #00ff00; }
+}
+
+.user-message {
+    background-color: #00ffff;
+    color: #0d0d0d;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.ai-message {
+    background-color: #ffcc00;
+    color: #0d0d0d;
+    align-self: flex-start;
+    text-align: left;
+}
+
+.input-area {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    padding: 0.75rem;
+    background-color: #1a1a1a;
+    border: 1px solid #00ffff;
+    color: #00ff00;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+button {
+    background-color: #00ff00;
+    color: #0d0d0d;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px #00ff00;
+    border: none;
+}
+
+button:hover {
+    background-color: #ffcc00;
+    color: #0d0d0d;
+    box-shadow: 0 0 15px #ffcc00;
+    transform: translateY(-2px);
+}
+
+#loading-indicator {
+    text-align: center;
+    color: #00ffff;
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+#generated-readme-container {
+    background-color: #1a1a1a;
+    border: 1px solid #ffcc00;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #ffcc00;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 500px;
+    overflow-y: auto;
+    color: #00ff00;
+}
+
+#copy-button, #download-button {
+    background-color: #00ffff;
+    color: #0d0d0d;
+    box-shadow: 0 0 10px #00ffff;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+#copy-button:hover, #download-button:hover {
+    background-color: #00ff00;
+    box-shadow: 0 0 15px #00ff00;
+}
+
+/* Styles for new buttons */
+#back-button, #redo-button {
+    background-color: #663399;
+    color: #fff;
+    box-shadow: 0 0 10px #663399;
+}
+
+#back-button:hover, #redo-button:hover {
+    background-color: #8A2BE2;
+    box-shadow: 0 0 15px #8A2BE2;
+}
+
+/* Progress Ritual styles */
+#progress-ritual {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.sigil {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #2a2a2a;
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.sigil.active {
+    background-color: #00ff00;
+    box-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.logo-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive adjustments */
+@media (min-width: 640px) {
+    .container {
+        max-width: 700px;
+    }
+    .input-area button {
+        width: auto;
+    }
+    .input-area {
+        flex-wrap: nowrap;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mythic Builder Portal // README Generator</h1>
+
+        <div class="chat-window" id="chat-window">
+            <div id="progress-ritual"></div>
+        </div>
+
+        <div class="input-area">
+            <button id="back-button" disabled>Back</button>
+            <input type="text" id="user-input" placeholder="Type your answer here..." autofocus>
+            <button id="send-button">Send</button>
+            <button id="redo-button">Redo</button>
+        </div>
+
+        <div id="loading-indicator" class="hidden">Generating README...</div>
+
+        <div id="generated-readme-container" class="hidden">
+            <h2 class="text-xl font-bold text-gold mb-4">Generated README:</h2>
+            <pre id="generated-readme-content" class="text-neon-green"></pre>
+            <button id="copy-button">Copy to Clipboard</button>
+            <button id="download-button">⬇️ Download README.md</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Global variables for Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // UI Elements
+        const chatWindow = document.getElementById('chat-window');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const backButton = document.getElementById('back-button');
+        const redoButton = document.getElementById('redo-button');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const generatedReadmeContainer = document.getElementById('generated-readme-container');
+        const generatedReadmeContent = document.getElementById('generated-readme-content');
+        const copyButton = document.getElementById('copy-button');
+        const downloadButton = document.getElementById('download-button');
+        const progressRitual = document.getElementById('progress-ritual');
+
+        // Conversation state
+        const conversationQuestions = [
+            { key: 'githubUsername', prompt: 'What is your **GitHub username**? (This will be used in links to your repository)' },
+            { key: 'githubRepoName', prompt: 'What is the **exact name of your GitHub repository** for this project? (e.g., "battleships", "my-awesome-project")' },
+            { key: 'projectTitle', prompt: 'What is the **title** of your project?' },
+            { key: 'projectStatus', prompt: 'What is the current **status** of your project? (e.g., Operational, In Development, Alpha, Beta)' },
+            { key: 'projectDescription', prompt: 'Please provide a brief **description** of your project. What is its purpose and what are its key features?' },
+            { key: 'brandKeywords', prompt: 'Are there any specific **keywords, themes, or aesthetic elements** (e.g., "Praximous", "retro-terminal", "neon-gold-void", "Modularity is Mythos") you\'d like to emphasize in the README?' },
+            { key: 'programmingLanguage', prompt: 'What is the **primary programming language** or technology stack used in this project? (e.g., "Python", "JavaScript", "C++"). *Only the first language mentioned will be used for the badge.*' },
+            { key: 'operatingSystem', prompt: 'What **operating system(s)** is this project designed for or primarily compatible with? (e.g., Windows, macOS, Linux, cross-platform)' },
+            { key: 'developmentTools', prompt: 'Are there any specific **development tools, IDEs, or build systems** recommended for working with or contributing to this project? (e.g., VS Code, Docker, npm, Maven)' },
+            { key: 'projectStructure', prompt: 'Can you describe the **main directories and files** in your project\'s structure, and their purpose? (e.g., "src/game.py: core logic", "assets/images: game sprites")' },
+            { key: 'installationSteps', prompt: 'How can users **install and set up** your project? Provide detailed, step-by-step instructions with commands.' },
+            { key: 'usageInstructions', prompt: 'How do users **use** your project? Provide clear instructions, including controls and examples.' },
+            { key: 'contributingGuidelines', prompt: 'Are there any **guidelines for contributing** to your project? (e.g., how to submit bug reports, feature requests, or if contributions are not accepted yet)' },
+            { key: 'licenseInfo', prompt: 'What **license** does your project use? (e.g., MIT License, Apache 2.0)' },
+            { key: 'additionalInfo', prompt: 'Is there anything else you\'d like to add or emphasize in the README before I generate it?' }
+        ];
+        let currentQuestionIndex = 0;
+        let collectedAnswers = {};
+        let isGenerating = false; // Flag to prevent multiple generations
+
+        // Function to show a custom message box (instead of alert)
+        function showMessageBox(message) {
+            const messageBox = document.createElement('div');
+            messageBox.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #1a1a1a;
+                border: 2px solid #ffcc00;
+                box-shadow: 0 0 15px #00ff00;
+                padding: 20px;
+                border-radius: 10px;
+                color: #00ff00;
+                font-family: 'Inter', monospace;
+                z-index: 1000;
+                text-align: center;
+            `;
+            messageBox.innerHTML = `
+                <p>${message}</p>
+                <button style="
+                    background-color: #00ffff;
+                    color: #0d0d0d;
+                    padding: 8px 15px;
+                    border-radius: 5px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    margin-top: 15px;
+                    border: none;
+                " onclick="this.parentNode.remove()">OK</button>
+            `;
+            document.body.appendChild(messageBox);
+        }
+
+        // Function to add a message to the chat window
+        function addMessageToChat(message, sender, questionIndex) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message');
+            messageElement.setAttribute('data-question-index', questionIndex);
+            if (sender === 'user') {
+                messageElement.classList.add('user-message');
+            } else {
+                messageElement.classList.add('ai-message');
+            }
+            messageElement.innerHTML = message; // Use innerHTML to render bold text
+            chatWindow.appendChild(messageElement);
+            chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to bottom
+        }
+
+        // Function to ask the next question
+        function askNextQuestion() {
+            if (currentQuestionIndex < conversationQuestions.length) {
+                const question = conversationQuestions[currentQuestionIndex].prompt;
+                addMessageToChat(question, 'ai', currentQuestionIndex);
+                updateProgressRitual(currentQuestionIndex);
+                updateButtonStates();
+            } else {
+                // All questions asked, time to generate README
+                generateReadmeFromAnswers();
+            }
+        }
+
+        // Function to update button enabled/disabled states
+        function updateButtonStates() {
+            backButton.disabled = currentQuestionIndex <= 0 || isGenerating;
+            sendButton.disabled = isGenerating;
+            userInput.disabled = isGenerating;
+            redoButton.disabled = isGenerating;
+            // Disable download/copy buttons if README not yet generated
+            const readmeGenerated = generatedReadmeContent.textContent.length > 0;
+            copyButton.disabled = !readmeGenerated;
+            downloadButton.disabled = !readmeGenerated;
+        }
+
+        // NEW: Function to update the progress ritual display
+        function updateProgressRitual(index) {
+            const sigils = progressRitual.children;
+            // Deactivate all sigils beyond the current index
+            for (let i = index; i < sigils.length; i++) {
+                sigils[i].classList.remove('active');
+            }
+            // Activate the current sigil
+            if (index > 0 && index <= sigils.length) {
+                sigils[index - 1].classList.add('active');
+            }
+        }
+
+        // Exponential backoff for API retries
+        async function fetchWithExponentialBackoff(url, options, retries = 5, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) {
+                        return response;
+                    } else if (response.status === 429 || response.status >= 500) {
+                        // Too Many Requests or Server Error, retry
+                        console.warn(`API call failed with status ${response.status}. Retrying in ${delay / 1000}s...`);
+                        addMessageToChat(`A temporal distortion was detected. Retrying the ritual in ${delay / 1000}s...`, 'ai');
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; // Exponential increase
+                    } else {
+                        // Other client-side errors, don't retry
+                        const errorData = await response.json();
+                        throw new Error(`API error: ${response.status} - ${errorData.message || response.statusText}`);
+                    }
+                } catch (error) {
+                    if (i === retries - 1) {
+                        throw error; // Re-throw if it's the last retry
+                    }
+                    console.error(`Fetch attempt failed: ${error.message}. Retrying...`);
+                    addMessageToChat("The portal connection is unstable. Attempting to re-establish the link...", 'ai');
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2; // Exponential increase
+                }
+            }
+            throw new Error('Max retries exceeded for API call.');
+        }
+
+        async function generateGlyphLogo() {
+            const apiKey = "YOUR_GEMINI_API_KEY_HERE";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const projectTitle = collectedAnswers.projectTitle || 'Project Glyph';
+            const projectDescription = collectedAnswers.projectDescription || 'A digital creation.';
+            const brandKeywords = collectedAnswers.brandKeywords || 'retro-bright, neon, glyph, portal';
+            
+            const prompt = `A retro-bright neon glyph game logo for '${projectTitle}' with a style that evokes '${brandKeywords}'. It should be a vector-style illustration of a game character or icon based on the description: '${projectDescription}'. The design should be clean and suitable as a game logo, with a black background.`;
+
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
+                "generationConfig": {
+                    "responseMimeType": "image/jpeg"
+                }
+            };
+            
+            const response = await fetchWithExponentialBackoff(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            if (response.ok) {
+                const blob = await response.blob();
+                const imageURL = URL.createObjectURL(blob);
+                return imageURL;
+            } else {
+                throw new Error("Failed to generate logo image.");
+            }
+        }
+
+        // Function to generate README using Gemini API from collected answers
+        async function generateReadmeFromAnswers() {
+            if (isGenerating) return; // Prevent duplicate calls
+            isGenerating = true;
+            updateButtonStates(); // Disable buttons during generation
+
+            addMessageToChat("Thank you! I have all the information. Please wait while I generate your README...", 'ai', conversationQuestions.length);
+            loadingIndicator.classList.remove('hidden');
+            generatedReadmeContainer.classList.add('hidden');
+            generatedReadmeContent.textContent = '';
+            
+            let generatedLogoUrl = "https://user-images.githubusercontent.com/97833075/274483753-43c3f2d2-8a9d-472e-8360-1e2474f3ff5e.png";
+            try {
+                addMessageToChat("Manifesting your custom project glyph...", 'ai', -1);
+                generatedLogoUrl = await generateGlyphLogo();
+            } catch (error) {
+                addMessageToChat("A glitch in the void prevented the custom glyph from manifesting. A default artifact will be used instead.", 'ai', -1);
+                console.error("Error generating custom logo:", error);
+            }
+            
+            // Define the static J.T.G Praximous ASCII art
+            const jtgPraximousAsciiArt = `
+<pre>
+  ░██████╗░██████╗░░█████╗░██████╗░███████╗░█████╗░██╗░░░██╗███████╗██████╗░
+  ██╔════╝░██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗██║░░░██║██╔════╝██╔══██╗
+  ██████╗░░██████╔╝███████║██████╔╝█████╗░░███████║██║░░░██║█████╗░░██████╔╝
+  ██╔══██╗░██╔══██╗██╔══██║██╔══██╗██╔══╝░░██╔══██║██║░░░██║██╔══╝░░██╔══██╗
+  ██████╝░░██║░░██║██║░░██║██║░░██║███████╗██║░░██║╚██████╔╝███████╗██║░░██║
+  ╚═════╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝░╚═════╝░╚══════╝╚═╝░░╚═╝
+</pre>
+<h1 style="color:#FFD700;">// Mythic Builder Portal //</h1>
+<h2 style="color:#FF69B4;">// A Praximous Glyphic Ritual //</h2>
+`;
+
+            const footerAsciiArt = `
+<pre>
+    ▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
+    ▌                                                                         ▐
+    ▌ <span style="color:#00FFFF;">PRAXIMOUS</span> <span style="color:#FFD700;">BUILDER</span> <span style="color:#FF6100;">PORTAL</span>  //  <span style="color:#00FFFF;">CRAFTED</span> <span style="color:#FFD700;">IN</span> <span style="color:#FF6100;">THE</span> <span style="color:#00FFFF;">VOID</span> // <span style="color:#FFD700;">EMBRACE</span> <span style="color:#FF6100;">THE</span> <span style="color:#00FFFF;">RETRO</span> <span style="color:#FFD700;">FUTURE</span>  ▐
+    ▌                                                                         ▐
+    ▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
+</pre>
+`;
+
+            try {
+                // Determine badge colors and logos based on input
+                const projectStatusLower = collectedAnswers.projectStatus.toLowerCase();
+                let projectStatusColor = 'informational';
+                if (projectStatusLower.includes('operational')) {
+                    projectStatusColor = 'brightgreen';
+                } else if (projectStatusLower.includes('development') || projectStatusLower.includes('in development')) {
+                    projectStatusColor = 'orange';
+                } else if (projectStatusLower.includes('beta')) {
+                    projectStatusColor = 'blue';
+                } else if (projectStatusLower.includes('alpha')) {
+                    projectStatusColor = 'red';
+                }
+
+                // Process programming language for badge
+                const rawLanguageInput = collectedAnswers.programmingLanguage || '';
+                const primaryLanguageForBadge = rawLanguageInput.split(',')[0].trim(); // Take only the first language for the badge text
+                const primaryLanguageLower = primaryLanguageForBadge.toLowerCase();
+
+                let languageColor = 'informational';
+                let languageLogo = 'github'; // Default generic logo if not found
+                if (primaryLanguageLower.includes('python')) {
+                    languageColor = 'blue';
+                    languageLogo = 'python';
+                } else if (primaryLanguageLower.includes('javascript') || primaryLanguageLower.includes('js')) {
+                    languageColor = 'yellow';
+                    languageLogo = 'javascript';
+                } else if (primaryLanguageLower.includes('java')) {
+                    languageColor = 'red';
+                    languageLogo = 'java';
+                } else if (primaryLanguageLower.includes('html') || primaryLanguageLower.includes('css')) {
+                    languageColor = 'orange';
+                    languageLogo = 'html5';
+                }
+                // Add more language color/logo mappings as needed
+
+                const osLower = collectedAnswers.operatingSystem.toLowerCase();
+                let osColor = 'informational';
+                let osLogo = 'windows'; // Default logo
+                if (osLower.includes('windows')) {
+                    osColor = '0078D4';
+                    osLogo = 'windows';
+                } else if (osLower.includes('macos') || osLower.includes('mac os')) {
+                    osColor = '000000';
+                    osLogo = 'apple';
+                } else if (osLower.includes('linux')) {
+                    osColor = 'FCC624';
+                    osLogo = 'linux';
+                }
+                // Add more OS color/logo mappings as needed
+
+                const githubUsername = collectedAnswers.githubUsername || 'your-username';
+                const githubRepoName = collectedAnswers.githubRepoName || collectedAnswers.projectTitle.toLowerCase().replace(/\s/g, '-') || 'project';
+
+                // Construct the static header part with dynamic badges
+                const headerMarkdown = `
+<div align="center">
+    <img src="${generatedLogoUrl}" alt="Generated Project Glyph" style="max-width: 250px; height: auto;">
+    <br>
+    ${jtgPraximousAsciiArt}
+    <img src="https://user-images.githubusercontent.com/97833075/274483753-43c3f2d2-8a9d-472e-8360-1e2474f3ff5e.png" alt="Neon Grid Horizon">
+    <br>
+    <br>
+    <p align="center">
+        <a href="https://github.com/${githubUsername}/${githubRepoName}">
+            <img src="https://img.shields.io/badge/Project%20Status-${encodeURIComponent(collectedAnswers.projectStatus)}-${projectStatusColor}?style=for-the-badge&logo=appveyor&logoColor=white" alt="Project Status">
+        </a>
+        <a href="https://github.com/${githubUsername}/${githubRepoName}">
+            <img src="https://img.shields.io/badge/Language-${encodeURIComponent(primaryLanguageForBadge)}-${languageColor}?style=for-the-badge&logo=${languageLogo}&logoColor=white" alt="Language">
+        </a>
+        <a href="https://github.com/${githubUsername}/${githubRepoName}">
+            <img src="https://img.shields.io/badge/OS%20Compatibility-${encodeURIComponent(collectedAnswers.operatingSystem)}-${osColor}?style=for-the-badge&logo=${osLogo}&logoColor=white" alt="OS Compatibility">
+        </a>
+    </p>
+    <br>
+    <p align="center">
+        <samp><b>MODULARITY IS MYTHOS // GLYPH IS IDENTITY // DESIGN IS RITUAL.</b></samp>
+    </p>
+</div>
+
+---
+
+## 📜 Praximous Codex // Table of Contents
+
+* [1. Project Overwrite // Glyph Genesis](#1-project-overwrite--glyph-genesis)
+* [2. Architect's Mandate // Core Configuration](#2-architects-mandate--core-configuration)
+* [3. Ritual of Summoning // Installation Protocol](#3-ritual-of-summoning--installation-protocol)
+* [4. Ignition Sequence // Operational Rites](#4-ignition-sequence--operational-rites)
+* [5. Codex of Structure // Praximous Manifest](#5-codex-of-structure--praximous-manifest)
+* [6. The Conclave of Builders // Contribution Protocol](#6-the-conclave-of-builders--contribution-protocol)
+* [7. Oathbound Accords // Licensing Mandate](#7-oathbound-accords--licensing-mandate)
+
+---
+`;
+
+                const footerMarkdown = `
+---
+
+<div align="center">
+    ${footerAsciiArt}
+    <img src="https://user-images.githubusercontent.com/97833075/274483753-43c3f2d2-8a9d-472e-8360-1e2474f3ff5e.png" alt="Neon Grid Horizon">
+    <br>
+    <p align="center">
+        <a href="https://github.com/${githubUsername}/${githubRepoName}">
+            <img src="https://img.shields.io/badge/Built%20With-${encodeURIComponent(primaryLanguageForBadge)}-${languageColor}?style=for-the-badge&logo=${languageLogo}&logoColor=white" alt="Built With Python">
+        </a>
+        <a href="https://github.com/${githubUsername}/${githubRepoName}/blob/main/LICENSE">
+            <img src="https://img.shields.io/badge/License-${encodeURIComponent(collectedAnswers.licenseInfo)}-FFD700?style=for-the-badge&logo=open-source-initiative&logoColor=white" alt="MIT License">
+        </a>
+        <a href="https://github.com/${githubUsername}/${githubRepoName}/stargazers">
+            <img src="https://img.shields.io/github/stars/${githubUsername}/${githubRepoName}?style=for-the-badge&logo=github&logoColor=white&color=0078D4" alt="GitHub Stars">
+        </a>
+    </p>
+    <br>
+    <p align="center">
+        <samp><b>MODULARITY IS MYTHOS // GLYPH IS IDENTITY // DESIGN IS RITUAL.</b></samp>
+    </p>
+</div>
+`;
+
+                let prompt = `Generate the *content only* for a comprehensive, highly detailed, and exceptionally well-formatted GitHub README.md section by section. Do NOT include the top-level badges, ASCII art title, Table of Contents, or the final footer/badges, as these are provided in the template.
+
+                **Crucially, adopt the exact style, tone, and level of detail of the 'Space Invaders' README example you were previously shown.** This includes:
+                -   **Strict adherence to the 'Praximous Branding Codex': MODULARITY IS MYTHOS // GLYPH IS IDENTITY // DESIGN IS RITUAL.**
+                -   **Incorporating a retro-terminal aesthetic, neon/gold/void colors conceptually in descriptions.**
+                -   **Reflecting the brand voice of James The Giblet's 'Mythic Builder Portal' using evocative terminology (e.g., "glyph," "ritual," "mythos," "void," "neon," "conclave," "portal").**
+                -   **Expanding significantly on each section with elaborate explanations, practical examples, and clear step-by-step instructions. Include example code blocks where appropriate (e.g., for project structure, installation, usage).**
+                -   **Ensuring the tone is professional, clear, and engaging.**
+
+                Generate content for the following sections, using the exact Markdown headings provided:
+
+                ## 1. Project Overwrite // Glyph Genesis
+                -   Describe the project, its purpose, and key features.
+                -   Integrate brand keywords and aesthetic descriptions.
+
+                ## 2. Architect's Mandate // Core Configuration
+                -   Detail the programming language/stack.
+                -   Explain operating system compatibility.
+                -   Describe recommended development tools/IDEs and why they are recommended.
+
+                ## 3. Ritual of Summoning // Installation Protocol
+                -   Provide highly detailed, step-by-step installation instructions with exact commands.
+                -   Include prerequisites and virtual environment setup.
+
+                ## 4. Ignition Sequence // Operational Rites
+                -   Provide clear usage instructions, including how to run the project and controls/inputs.
+                -   Describe the in-game experience.
+
+                ## 5. Codex of Structure // Praximous Manifest
+                -   Describe the main directories and files in the project's structure and their purpose.
+                -   Provide an example directory tree and explanations for key components, similar to the 'Space Invaders' example.
+
+                ## 6. The Conclave of Builders // Contribution Protocol
+                -   Outline guidelines for contributing, or state if contributions are not currently accepted, using branded language.
+
+                ## 7. Oathbound Accords // Licensing Mandate
+                -   Explain the project's license in detail, using branded language.
+
+                Here are the project details to use for generating the content:
+
+Project Title: ${collectedAnswers.projectTitle || 'N/A'}
+Project Status: ${collectedAnswers.projectStatus || 'N/A'}
+Project Description: ${collectedAnswers.projectDescription || 'N/A'}
+Brand Keywords/Themes: ${collectedAnswers.brandKeywords || 'N/A'}
+Programming Language/Stack: ${collectedAnswers.programmingLanguage || 'N/A'}
+Operating System Compatibility: ${collectedAnswers.operatingSystem || 'N/A'}
+Recommended Development Tools/IDEs: ${collectedAnswers.developmentTools || 'N/A'}
+Project Structure Details: ${collectedAnswers.projectStructure || 'N/A'}
+Installation Steps: ${collectedAnswers.installationSteps || 'N/A'}
+Usage Instructions: ${collectedAnswers.usageInstructions || 'N/A'}
+Contributing Guidelines: ${collectedAnswers.contributingGuidelines || 'N/A'}
+License Information: ${collectedAnswers.licenseInfo || 'N/A'}
+Additional Information/Emphasis: ${collectedAnswers.additionalInfo || 'N/A'}
+`;
+
+                if (prompt.length < 50) {
+                    showMessageBox("Please provide more details. The prompt is too short to generate a meaningful README.");
+                    addMessageToChat("I need more information to generate a good README. Can you elaborate on your project?", 'ai', conversationQuestions.length);
+                    isGenerating = false;
+                    updateButtonStates();
+                    loadingIndicator.classList.add('hidden');
+                    return;
+                }
+
+                console.log("Generated Prompt:", prompt);
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiKey = "YOUR_GEMINI_API_KEY_HERE";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const response = await fetchWithExponentialBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const generatedContent = result.candidates[0].content.parts[0].text;
+                    // Combine static header, generated content, and static footer
+                    generatedReadmeContent.textContent = headerMarkdown + generatedContent + footerMarkdown;
+                    generatedReadmeContainer.classList.remove('hidden');
+                    addMessageToChat("Your README has been generated!", 'ai', conversationQuestions.length);
+                } else {
+                    showMessageBox("Failed to generate README. Unexpected API response structure.");
+                    console.error("Unexpected API response structure:", result);
+                    addMessageToChat("I encountered an issue generating the README. Please try again.", 'ai', conversationQuestions.length);
+                }
+            } catch (error) {
+                showMessageBox(`Error generating README: ${error.message}. Please try again.`);
+                console.error("Error during README generation:", error);
+                addMessageToChat("I encountered an error. Please try again.", 'ai', conversationQuestions.length);
+            } finally {
+                loadingIndicator.classList.add('hidden');
+                isGenerating = false;
+                updateButtonStates();
+            }
+        }
+
+        // Function to download the generated README
+        function downloadReadme() {
+            const readmeContent = generatedReadmeContent.textContent;
+            if (readmeContent) {
+                const blob = new Blob([readmeContent], { type: "text/markdown" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                // Use the project title or a generic name for the download file
+                const fileName = (collectedAnswers.projectTitle ? collectedAnswers.projectTitle.toLowerCase().replace(/\s/g, '-') : 'readme') + '.md';
+                a.download = fileName;
+                document.body.appendChild(a); // Required for Firefox
+                a.click();
+                document.body.removeChild(a); // Clean up
+                URL.revokeObjectURL(url);
+                showMessageBox("README downloaded successfully!");
+            } else {
+                showMessageBox("No README content to download.");
+            }
+        }
+
+        // Event listener for sending messages
+        sendButton.addEventListener('click', () => {
+            const message = userInput.value.trim();
+            if (message && !isGenerating) {
+                addMessageToChat(message, 'user', currentQuestionIndex);
+                collectedAnswers[conversationQuestions[currentQuestionIndex].key] = message;
+                // Save progress to localStorage
+                localStorage.setItem('collectedAnswers', JSON.stringify(collectedAnswers));
+                localStorage.setItem('currentQuestionIndex', currentQuestionIndex + 1);
+
+                userInput.value = '';
+                currentQuestionIndex++;
+                askNextQuestion();
+            }
+        });
+
+        // Allow sending message with Enter key
+        userInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        // Event listener for Back button
+        backButton.addEventListener('click', () => {
+            if (currentQuestionIndex > 0 && !isGenerating) {
+                currentQuestionIndex--;
+                // Remove the last two messages (user and AI)
+                const lastMessages = chatWindow.querySelectorAll(`[data-question-index="${currentQuestionIndex}"]`);
+                lastMessages.forEach(msg => msg.remove());
+
+                const lastQuestionKey = conversationQuestions[currentQuestionIndex].key;
+                delete collectedAnswers[lastQuestionKey];
+                // Update localStorage
+                localStorage.setItem('collectedAnswers', JSON.stringify(collectedAnswers));
+                localStorage.setItem('currentQuestionIndex', currentQuestionIndex);
+
+                generatedReadmeContainer.classList.add('hidden');
+                generatedReadmeContent.textContent = '';
+
+                askNextQuestion();
+            }
+        });
+
+        // Event listener for Redo button
+        redoButton.addEventListener('click', () => {
+            if (!isGenerating) {
+                currentQuestionIndex = 0;
+                collectedAnswers = {};
+                chatWindow.innerHTML = ''; // Clear chat history
+                generatedReadmeContainer.classList.add('hidden');
+                generatedReadmeContent.textContent = '';
+                // Clear localStorage
+                localStorage.removeItem('collectedAnswers');
+                localStorage.removeItem('currentQuestionIndex');
+
+                addMessageToChat("Conversation restarted. Let's begin again!", 'ai', -1);
+                // Rebuild the progress ritual
+                initializeProgressRitual();
+                askNextQuestion();
+            }
+        });
+
+        // Event listener for copy button
+        copyButton.addEventListener('click', () => {
+            const textToCopy = generatedReadmeContent.textContent;
+            if (textToCopy) {
+                const textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                textarea.style.position = 'fixed';
+                textarea.style.left = '-9999px';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showMessageBox("README copied to clipboard!");
+                } catch (err) {
+                    console.error('Failed to copy text:', err);
+                    showMessageBox("Failed to copy README. Please copy manually.");
+                } finally {
+                    document.body.removeChild(textarea);
+                }
+            } else {
+                showMessageBox("No README content to copy.");
+            }
+        });
+
+        // NEW: Event listener for download button
+        downloadButton.addEventListener('click', downloadReadme);
+
+        // NEW: Function to initialize the progress ritual with sigils
+        function initializeProgressRitual() {
+            progressRitual.innerHTML = '';
+            for (let i = 0; i < conversationQuestions.length; i++) {
+                const sigil = document.createElement('div');
+                sigil.classList.add('sigil');
+                progressRitual.appendChild(sigil);
+            }
+        }
+
+        // Initial message from AI when the page loads
+        window.onload = () => {
+            initializeProgressRitual();
+            // Load progress from localStorage
+            const savedAnswers = localStorage.getItem('collectedAnswers');
+            const savedIndex = localStorage.getItem('currentQuestionIndex');
+
+            if (savedAnswers && savedIndex !== null) {
+                collectedAnswers = JSON.parse(savedAnswers);
+                currentQuestionIndex = parseInt(savedIndex, 10);
+
+                addMessageToChat("Welcome back! Resuming our conversation...", 'ai', -1);
+                // Rebuild chat history from saved answers
+                for(let i = 0; i < currentQuestionIndex; i++) {
+                    addMessageToChat(conversationQuestions[i].prompt, 'ai', i);
+                    addMessageToChat(collectedAnswers[conversationQuestions[i].key], 'user', i);
+                }
+
+                // If all questions were answered, try to generate README again
+                if (currentQuestionIndex >= conversationQuestions.length) {
+                    generateReadmeFromAnswers();
+                } else {
+                    askNextQuestion();
+                }
+            } else {
+                addMessageToChat("Welcome to the Mythic Builder Portal's README Generator! I'll ask you a few questions to gather the necessary information for your README. Let's begin!", 'ai', -1);
+                askNextQuestion();
+            }
+            updateButtonStates(); // Set initial button states
+        };
+    </script>
+</body>
+</html>
