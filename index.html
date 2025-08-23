@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🌀 Praximous — Repository Codex</title>
+  <meta name="description" content="A curated overview of Praximous's sovereign systems and projects by James 'The Giblet' Mavric." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0b10;
+      --bg-2: #0e1017;
+      --ink: #e8f0ff;
+      --muted: #9aa4c2;
+      --glyph: #87f5d6;
+      --myth: #b38eff;
+      --brand: linear-gradient(135deg, #87f5d6 0%, #b38eff 35%, #ff8cbe 70%, #ffd070 100%);
+      --accent: #ff8cbe;
+      --card: #121422cc;
+      --border: #1b2030;
+      --good: #89ffa3;
+      --warn: #ffd070;
+      --danger: #ff7a7a;
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 800px at 70% -10%, rgba(179, 142, 255, .12), rgba(10,11,16,0)) ,
+                  radial-gradient(900px 600px at 10% 110%, rgba(135, 245, 214, .08), rgba(10,11,16,0)) ,
+                  var(--bg);
+      color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.4;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, 92vw); margin: 0 auto; }
+
+    /* --- NAV ------------------------------------------------------------ */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(15,16,25,.8), rgba(15,16,25,.3));
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
+    .brand {
+      display: flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: .4px;
+      text-transform: uppercase; font-size: 14px;
+    }
+    .glyph { width: 26px; height: 26px; border-radius: 8px; background: var(--brand); box-shadow: var(--shadow); }
+    .nav-links { display: flex; gap: 14px; flex-wrap: wrap; }
+    .nav-links a { padding: 8px 12px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); font-weight: 600; }
+    .nav-links a:hover { color: var(--ink); border-color: #2a3148; }
+
+    /* --- HERO ----------------------------------------------------------- */
+    .hero { position: relative; padding: 80px 0 50px; overflow: hidden; }
+    .grid-bg {
+      position: absolute; inset: 0; pointer-events: none; opacity: .3;
+      background-image: linear-gradient(#151a2a 1px, transparent 1px), linear-gradient(90deg, #151a2a 1px, transparent 1px);
+      background-size: 44px 44px;
+      -webkit-mask-image: radial-gradient(1000px 700px at 50% 0%, rgba(0,0,0,1), rgba(0,0,0,0));
+      mask-image: radial-gradient(1000px 700px at 50% 0%, rgba(0,0,0,1), rgba(0,0,0,0));
+    }
+    .glitch {
+      font-size: clamp(36px, 6vw, 78px);
+      font-weight: 900;
+      letter-spacing: .6px;
+      line-height: 1.05;
+      margin: 0 0 12px;
+      position: relative;
+      display: inline-block;
+    }
+    .glitch:after, .glitch:before {
+      content: attr(data-text);
+      position: absolute; inset: 0; filter: blur(.8px); opacity: .45; pointer-events: none;
+    }
+    .glitch:before { transform: translate(1px, 0); color: #87f5d6; mix-blend-mode: screen; }
+    .glitch:after { transform: translate(-1px, 0); color: #b38eff; mix-blend-mode: screen; }
+    .subtitle { color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: clamp(12px, 1.7vw, 15px); }
+    .quote { margin-top: 16px; padding-left: 12px; border-left: 3px solid #2b3048; color: #c6cff5; font-style: italic; }
+
+    .hero-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+    .btn { padding: 10px 16px; border-radius: 999px; border: 1px solid var(--border); font-weight: 700; }
+    .btn.primary { background: var(--brand); color: #0b0b12; }
+    .btn.ghost { color: var(--ink); }
+
+    /* --- SECTION -------------------------------------------------------- */
+    section { padding: 56px 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    h2 { font-size: clamp(22px, 3.8vw, 34px); margin: 0; }
+    .section-head .muted { color: var(--muted); }
+
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .card {
+      background: radial-gradient(600px 300px at 30% -10%, rgba(135,245,214,.12), transparent 60%),
+                  radial-gradient(600px 300px at 130% 120%, rgba(179,142,255,.10), transparent 60%),
+                  var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px; position: relative; overflow: hidden;
+    }
+    /* Specific glow for "Praximous Pick" */
+    .card.praximous-pick {
+      position: relative;
+      z-index: 1;
+    }
+    .card.praximous-pick::before {
+      content: '';
+      position: absolute;
+      inset: -3px; /* Control the size of the glow */
+      background: linear-gradient(45deg, #a855f7, #ec4899, #6366f1, #3b82f6);
+      background-size: 400% 400%;
+      animation: glowing 8s ease infinite;
+      border-radius: var(--radius); /* Match card border-radius */
+      filter: blur(8px); /* Adjust blur for glow intensity */
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    @keyframes glowing {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+
+    .card h3 { margin: 0 0 6px; font-size: 18px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--muted); }
+    .tagbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .desc { color: #cdd6ff; margin-top: 8px; font-size: 14px; }
+
+    .status { font-weight: 800; letter-spacing: .2px; }
+    .s-live { color: var(--good); }
+    .s-active { color: #b3a1ff; }
+    .s-design { color: var(--warn); }
+    .s-future { color: #77d0ff; }
+    .s-experimental { color: var(--danger); }
+    .s-pick { background: linear-gradient(90deg, #ff8cbe, #b38eff); color: #0b0b12; font-weight: bold; }
+
+
+    /* FILTERS - removed as requested for static HTML */
+
+    /* Footer */
+    footer { padding: 40px 0 80px; color: var(--muted); text-align: center; border-top: 1px dashed #222842; margin-top: 40px; }
+
+    /* Tiny details */
+    .kbd { font-family: "JetBrains Mono", monospace; font-size: 12px; opacity: .8; padding: 2px 6px; border: 1px solid var(--border); border-radius: 6px; }
+    .mono { font-family: "JetBrains Mono", monospace; }
+    .hr { height: 1px; background: linear-gradient(90deg, transparent, #222842, transparent); margin: 22px 0; }
+
+    /* Floating radial action */
+    .fab {
+      position: fixed; right: 18px; bottom: 18px; z-index: 60;
+      background: var(--brand); color: #0b0b12; border-radius: 999px; padding: 14px 18px; font-weight: 900; box-shadow: var(--shadow); cursor: pointer;
+    }
+
+    /* Print tweaks */
+    @media print {
+      .nav, .hero-actions, .filters, .fab { display: none !important; }
+      body { background: white; color: #111; }
+      .card { break-inside: avoid; background: white; border: 1px solid #ddd; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="brand"><span class="glyph"></span> Praximous Ecosystem</div>
+      <nav class="nav-links">
+        <a href="#projects">Projects</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="grid-bg"></div>
+    <div class="container">
+      <h1 class="glitch" data-text="Praximous: Repository Codex">Praximous: Repository Codex</h1>
+      <div class="subtitle">A curated collection by <strong>James ‘The Giblet’ Mavric</strong>.</div>
+      <p class="quote">“The grid remembers. The trail reveals. The builder endures.”</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#projects">View All Repositories</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="container">
+      <div class="section-head">
+        <h2>🜁 The Codex of Systems</h2>
+        <div class="muted mono">36 projects, shaping the sovereign future.</div>
+      </div>
+
+      <div class="card-grid" id="grid">
+        <!-- Generated Project Cards Start Here -->
+        <article class="card praximous-pick" data-category="Gaming" data-status="Active">
+          <h3>Sovereign Engine: Flux — Hackable Game Framework</h3>
+          <div class="tagbar">
+            <span class="pill s-pick">Praximous Pick</span>
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Hot‑swap</span>
+            <span class="pill">No build step</span>
+            <span class="pill">Browser‑native</span>
+          </div>
+          <p class="desc">A manifesto disguised as an engine: DI systems, real‑time edits, and zero licensing friction. Every line invites modification and digital sovereignty.</p>
+        </article>
+
+        <article class="card" data-category="Robotics" data-status="Live">
+          <h3>Project G.I.S.M.O. — Autonomous Wanderer</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">RPi Zero 2W</span>
+            <span class="pill">Ultrasonic</span>
+            <span class="pill">Edge detect</span>
+          </div>
+          <p class="desc">An open foundation robot with ultrasonic & edge detection, L298N motor control, and a learn‑by‑building philosophy.</p>
+        </article>
+
+        <article class="card" data-category="AI" data-status="Experimental">
+          <h3>ForgeMind — Autonomous AI Development Platform</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-experimental">Experimental</span></span>
+            <span class="pill">Six pillars</span>
+            <span class="pill">Budget‑aware</span>
+            <span class="pill">Safety‑first</span>
+          </div>
+          <p class="desc">Meta‑learning for model evolution: Brain/Foundry/Forge/Trials/Lorekeeper/Warden, synthetic data, and oversight‑by‑design.</p>
+        </article>
+
+        <article class="card" data-category="Finance" data-status="Active">
+          <h3>Project Aura — Epistemic Trading Engine</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Contradictions</span>
+            <span class="pill">Dialectic</span>
+            <span class="pill">Paper trade</span>
+          </div>
+          <p class="desc">A cognitive lab for markets: contradiction mapping, archetype tournaments, and epistemic scoring beyond P&L.</p>
+        </article>
+
+        <article class="card praximous-pick" data-category="DevTools" data-status="Live">
+          <h3>devenv — Instant Dev Environments</h3>
+          <div class="tagbar">
+            <span class="pill s-pick">Praximous Pick</span>
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">2‑second boot</span>
+            <span class="pill">Local‑first</span>
+            <span class="pill">Tiny RAM</span>
+          </div>
+          <p class="desc">Reproducible environments, no Docker/VMs, offline‑friendly, share as single files. Cloud speed, laptop reliability, and ultimate developer freedom.</p>
+        </article>
+
+        <article class="card" data-category="WebApps" data-status="Active">
+          <h3>Praximous Brand Bot — Copilot Agents</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Interview</span>
+            <span class="pill">Rewriter</span>
+            <span class="pill">Consistency</span>
+          </div>
+          <p class="desc">Systematic brand voice: interview, rewrite per platform, check consistency, analyze performance, and schedule posts.</p>
+        </article>
+
+        <article class="card" data-category="Gaming" data-status="Active">
+          <h3>Gridborn Protocol — 8‑Bit Arena Combat</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">8×8–16×16</span>
+            <span class="pill">Trail warfare</span>
+            <span class="pill">Mythic lore</span>
+          </div>
+          <p class="desc">Tactical engine inspired by TRON × Advance Wars: modular vehicles, trail mechanics, power‑ups, and community co‑authorship.</p>
+        </article>
+
+        <article class="card" data-category="AI" data-status="Active">
+          <h3>Praxis — Modular Self‑Improving AI Assistant</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Skill modules</span>
+            <span class="pill">Self‑repair</span>
+            <span class="pill">RAG foundation</span>
+          </div>
+          <p class="desc">A J.A.R.V.I.S‑like partner: hot‑swappable skills, contextual memory, test‑and‑repair loops, sentiment adaptation, and genuine self‑improvement.</p>
+        </article>
+
+        <article class="card" data-category="Finance" data-status="Active">
+          <h3>SignalCraft Omen — Disciplined Ritual Engine</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Vows</span>
+            <span class="pill">Shadow mode</span>
+            <span class="pill">Audit trail</span>
+          </div>
+          <p class="desc">Volatility‑normalized alerts with cooling periods, journaling, and complete traceability to cultivate discipline over prediction.</p>
+        </article>
+
+        <article class="card" data-category="DevTools" data-status="Live">
+          <h3>API Blueprint Generator — Spec‑First</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">FastAPI/Flask</span>
+            <span class="pill">Tests+Migrations</span>
+            <span class="pill">70% faster</span>
+          </div>
+          <p class="desc">Transform Markdown into production APIs with auth, validation, tests, Docker, and DB migrations — single source of truth for your architecture.</p>
+        </article>
+
+        <article class="card praximous-pick" data-category="WebApps" data-status="Live">
+          <h3>Vault Motors — PWA Demo</h3>
+          <div class="tagbar">
+            <span class="pill s-pick">Praximous Pick</span>
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">PWA</span>
+            <span class="pill">Radial menu</span>
+            <span class="pill">Image‑first</span>
+          </div>
+          <p class="desc">Mobile‑first car listing demo: big photos, thumb‑friendly UI, direct contact, and fast lazy‑loaded images for a seamless user experience.</p>
+        </article>
+
+        <article class="card" data-category="Robotics" data-status="Design">
+          <h3>Johnny 5 “Number 3” — Advanced Robotics Platform</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-design">Design</span></span>
+            <span class="pill">Multi‑brain</span>
+            <span class="pill">Sensor fusion</span>
+            <span class="pill">LiPo safety</span>
+          </div>
+          <p class="desc">A premium roadmap for a distributed, extensible robotics platform: multi‑CPU architecture, ultrasonic/IMU/camera fusion, modular subsystems, and robust power management.</p>
+        </article>
+
+        <article class="card" data-category="AI" data-status="Active">
+          <h3>VibeCode — Natural Language → Code</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Conversational</span>
+            <span class="pill">Sandboxed</span>
+            <span class="pill">Style learning</span>
+          </div>
+          <p class="desc">Translate ideas to working software with interactive refinement, safe execution, and growing language support (Py/JS/Rust/C++), empowering intuitive development.</p>
+        </article>
+
+        <article class="card" data-category="Finance" data-status="Active">
+          <h3>Fracture Engine — Dialectic Insight</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Socratic AI</span>
+            <span class="pill">Pattern mining</span>
+            <span class="pill">Knowledge graph</span>
+          </div>
+          <p class="desc">Turns contradiction into generative insight via adversarial dialogues, pattern discovery, and governance for productive decay in complex financial systems.</p>
+        </article>
+
+        <article class="card" data-category="DevTools" data-status="Live">
+          <h3>EmbedID — Code Ownership Protection</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">Watermarks</span>
+            <span class="pill">Lineage</span>
+            <span class="pill">Fork‑friendly</span>
+          </div>
+          <p class="desc">Tamper‑resistant watermarks and remix lineage without a central registry. Respects authorship without enforcing it, fostering open collaboration.</p>
+        </article>
+
+        <article class="card" data-category="WebApps" data-status="Live">
+          <h3>Quick Texture Paint Setup — Blender Add‑on</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">One‑click</span>
+            <span class="pill">Auto UV</span>
+            <span class="pill">GPL</span>
+          </div>
+          <p class="desc">Automates texture painting setup: unwrap, materials, textures, and drops you straight into Texture Paint mode for Blender users.</p>
+        </article>
+        
+        <article class="card" data-category="AI" data-status="Active">
+          <h3>Coddy V3 — AI Coding Partner</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Genesis</span>
+            <span class="pill">Tasks</span>
+            <span class="pill">Weird‑Idea</span>
+          </div>
+          <p class="desc">Desktop assistant that handles grunt work while you create: brainstorm, code, track progress, and inject controlled chaos into your development workflow.</p>
+        </article>
+
+        <article class="card" data-category="Finance" data-status="Active">
+          <h3>Countertype — Adversarial Resilience Training</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Cognitive traps</span>
+            <span class="pill">Archetypes</span>
+            <span class="pill">Progressions</span>
+          </div>
+          <p class="desc">A forkable module injecting binary traps, certainty cascades, and loops to build antifragile cognition for better decision-making.</p>
+        </article>
+
+        <article class="card" data-category="DevTools" data-status="Live">
+          <h3>Aegis‑CLI — Security Docs Automation</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">Stack detect</span>
+            <span class="pill">SECURITY.md</span>
+            <span class="pill">CI‑ready</span>
+          </div>
+          <p class="desc">Auto‑generates security docs and dependency automation with language‑aware guides and CI integration, streamlining your security processes.</p>
+        </article>
+
+        <article class="card" data-category="WebApps" data-status="Live">
+          <h3>Random‑Art — Generative Script</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">Mathematical</span>
+            <span class="pill">Customizable</span>
+            <span class="pill">Exportable</span>
+          </div>
+          <p class="desc">A small Python study in emergent beauty: algorithmic patterns, tweakable parameters, and easy image export for creative exploration.</p>
+        </article>
+
+        <article class="card" data-category="Robotics" data-status="Active">
+          <h3>Sentinel Drones — Swarm Intelligence Platform</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Decentralized AI</span>
+            <span class="pill">Mesh networking</span>
+            <span class="pill">Sensor fusion</span>
+          </div>
+          <p class="desc">Autonomous swarm drones designed for reconnaissance and environmental monitoring with advanced sensor arrays and resilient communication.</p>
+        </article>
+
+        <article class="card" data-category="AI" data-status="Active">
+          <h3>The Pre‑Planner — Intelligent Task Optimization</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Bundling</span>
+            <span class="pill">Fatigue model</span>
+            <span class="pill">Minimal UI</span>
+          </div>
+          <p class="desc">Strategic pre‑planning with context‑aware clustering, better estimates, and break timing to prevent burnout and maximize productivity.</p>
+        </article>
+
+        <article class="card" data-category="Gaming" data-status="Design">
+          <h3>Mythic Forge — Procedural Lore Engine</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-design">Design</span></span>
+            <span class="pill">Narrative trees</span>
+            <span class="pill">Archetype generator</span>
+            <span class="pill">World building</span>
+          </div>
+          <p class="desc">Generates rich, consistent game lore and world details using procedural algorithms and dynamic narrative branching for immersive storytelling.</p>
+        </article>
+        
+        <article class="card" data-category="DevTools" data-status="Active">
+          <h3>ChronoScribe — Ritualized Ingestion</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Schema‑agnostic</span>
+            <span class="pill">Traceability</span>
+            <span class="pill">Export contracts</span>
+          </div>
+          <p class="desc">Transforms raw data into cognitive artifacts via validators, mnemonics, and checksums — with signed payloads for handoffs and robust data integrity.</p>
+        </article>
+
+        <article class="card" data-category="Finance" data-status="Future">
+          <h3>Quantum Ledger — Immutable Record Keeping</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-future">Future</span></span>
+            <span class="pill">Blockchain principles</span>
+            <span class="pill">Auditable</span>
+            <span class="pill">Decentralized</span>
+          </div>
+          <p class="desc">Exploring a next-generation immutable ledger system for transparent and secure financial record-keeping, ensuring full auditability.</p>
+        </article>
+
+        <article class="card" data-category="WebApps" data-status="Design">
+          <h3>The Mythwright’s Workshop — Central Portal</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-design">Design</span></span>
+            <span class="pill">Modular hub</span>
+            <span class="pill">Guides</span>
+            <span class="pill">Community</span>
+          </div>
+          <p class="desc">Unified presence for free docs, premium roadmaps, and services. The nexus where all Praximous projects converge for community interaction.</p>
+        </article>
+
+        <article class="card" data-category="AI" data-status="Active">
+          <h3>Praximous AI Gateway — Enterprise Orchestration</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Unified API</span>
+            <span class="pill">Smart routing</span>
+            <span class="pill">Failover</span>
+          </div>
+          <p class="desc">On‑prem control plane for providers, costs, policies, and reusable AI skills across the org, enabling seamless enterprise integration.</p>
+        </article>
+
+        <article class="card" data-category="Robotics" data-status="Experimental">
+          <h3>Automata Core — Self-evolving Machine OS</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-experimental">Experimental</span></span>
+            <span class="pill">Adaptive OS</span>
+            <span class="pill">Hardware abstraction</span>
+            <span class="pill">Modular drivers</span>
+          </div>
+          <p class="desc">An experimental operating system designed for self-evolving robotic hardware, featuring adaptive learning and modular component management.</p>
+        </article>
+
+        <article class="card" data-category="Gaming" data-status="Live">
+          <h3>Cipher Saga — Text-Based Adventure</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">Narrative AI</span>
+            <span class="pill">Dynamic choices</span>
+            <span class="pill">Branching paths</span>
+          </div>
+          <p class="desc">An interactive text-based adventure game powered by narrative AI, offering dynamic choices and branching storylines for infinite replayability.</p>
+        </article>
+
+        <article class="card" data-category="DevTools" data-status="Active">
+          <h3>Code Whisperer — Semantic Code Search</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Vector embeddings</span>
+            <span class="pill">Code graph</span>
+            <span class="pill">Contextual search</span>
+          </div>
+          <p class="desc">A development tool that uses semantic search and code graph analysis to help developers find relevant code snippets and functions based on natural language queries.</p>
+        </article>
+
+        <article class="card" data-category="Finance" data-status="Active">
+          <h3>Harvest Protocol — Decentralized Yield Aggregator</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">DeFi</span>
+            <span class="pill">Smart contracts</span>
+            <span class="pill">Automated strategies</span>
+          </div>
+          <p class="desc">A DeFi platform for optimizing cryptocurrency yields through automated strategies and decentralized governance, maximizing returns for users.</p>
+        </article>
+
+        <article class="card" data-category="WebApps" data-status="Future">
+          <h3>ChronoFlow — Visual Data Pipeline Builder</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-future">Future</span></span>
+            <span class="pill">No-code ETL</span>
+            <span class="pill">Drag & drop</span>
+            <span class="pill">Real-time preview</span>
+          </div>
+          <p class="desc">A future web application designed for building data pipelines with a visual, no-code interface, offering real-time previews and easy deployment.</p>
+        </article>
+
+        <article class="card praximous-pick" data-category="AI" data-status="Live">
+          <h3>Thought Weave — Knowledge Graph AI</h3>
+          <div class="tagbar">
+            <span class="pill s-pick">Praximous Pick</span>
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">Semantic search</span>
+            <span class="pill">Contextual reasoning</span>
+            <span class="pill">Automated synthesis</span>
+          </div>
+          <p class="desc">An advanced AI system that constructs and queries a dynamic knowledge graph for deep semantic understanding and automated information synthesis, a true cognitive assistant.</p>
+        </article>
+
+        <article class="card" data-category="Robotics" data-status="Active">
+          <h3>Bio-Synth Fabricator — Modular 3D Bioprinting</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Open-source hardware</span>
+            <span class="pill">Cellular scaffolds</span>
+            <span class="pill">Precision control</span>
+          </div>
+          <p class="desc">A modular, open-source 3D bioprinter platform for creating custom cellular scaffolds and tissue structures with high precision and adaptability.</p>
+        </article>
+
+        <article class="card" data-category="Gaming" data-status="Experimental">
+          <h3>Echoes of Aethel — VR Mythic RPG</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-experimental">Experimental</span></span>
+            <span class="pill">VR Immersion</span>
+            <span class="pill">Procedural worlds</span>
+            <span class="pill">Adaptive AI foes</span>
+          </div>
+          <p class="desc">An experimental VR RPG focusing on deep immersion in procedurally generated mythic worlds, featuring adaptive AI enemies and dynamic storytelling.</p>
+        </article>
+
+        <article class="card" data-category="DevTools" data-status="Live">
+          <h3>SchemaForge — Automated Data Modeling</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">JSON Schema</span>
+            <span class="pill">Database sync</span>
+            <span class="pill">Code generation</span>
+          </div>
+          <p class="desc">A tool for automated data modeling, converting JSON Schemas into database migrations and API code, ensuring consistency across your stack.</p>
+        </article>
+
+        <article class="card" data-category="Finance" data-status="Design">
+          <h3>Oracle Chain — Decentralized Price Oracles</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-design">Design</span></span>
+            <span class="pill">Aggregated data</span>
+            <span class="pill">Tamper-proof</span>
+            <span class="pill">Cross-chain</span>
+          </div>
+          <p class="desc">Designing a decentralized network of price oracles to provide reliable, tamper-proof, and cross-chain compatible data for DeFi applications.</p>
+        </article>
+
+        <article class="card" data-category="WebApps" data-status="Active">
+          <h3>GlyphSynth — Icon & Asset Generator</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">SVG Export</span>
+            <span class="pill">Thematic Styles</span>
+            <span class="pill">Customizable</span>
+          </div>
+          <p class="desc">A web application for generating unique icons and visual assets with customizable styles and themes, supporting SVG export for design flexibility.</p>
+        </article>
+
+        <article class="card" data-category="AI" data-status="Future">
+          <h3>Consciousness Mirror — Self-Aware AI Simulation</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-future">Future</span></span>
+            <span class="pill">Emergent behavior</span>
+            <span class="pill">Cognitive architecture</span>
+            <span class="pill">Ethical AI testing</span>
+          </div>
+          <p class="desc">A conceptual project exploring the simulation of self-aware AI, focusing on emergent behaviors, advanced cognitive architectures, and ethical testing protocols.</p>
+        </article>
+        
+        <article class="card" data-category="Robotics" data-status="Live">
+          <h3>Armada Swarm — Collaborative Robot System</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">Task partitioning</span>
+            <span class="pill">Dynamic allocation</span>
+            <span class="pill">Robust communication</span>
+          </div>
+          <p class="desc">A live collaborative robotics system enabling multiple robots to partition tasks and dynamically allocate resources for efficient collective action.</p>
+        </article>
+
+        <article class="card" data-category="Gaming" data-status="Active">
+          <h3>Aether Drift — Arcade Space Shooter</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-active">Active</span></span>
+            <span class="pill">Procedural levels</span>
+            <span class="pill">Power-up cycles</span>
+            <span class="pill">Retro visuals</span>
+          </div>
+          <p class="desc">An active development arcade space shooter with infinite procedural levels, dynamic power-up cycles, and vibrant retro-inspired visual effects for endless fun.</p>
+        </article>
+
+        <article class="card" data-category="DevTools" data-status="Future">
+          <h3>Metaverse Builder — Collaborative 3D Editor</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-future">Future</span></span>
+            <span class="pill">Real-time sync</span>
+            <span class="pill">Asset library</span>
+            <span class="pill">Cross-platform</span>
+          </div>
+          <p class="desc">A future development tool for collaborative 3D scene creation, featuring real-time synchronization, an extensive asset library, and cross-platform compatibility.</p>
+        </article>
+
+        <article class="card" data-category="Finance" data-status="Live">
+          <h3>Token Vault — Secure Crypto Custody</h3>
+          <div class="tagbar">
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">Multi-sig</span>
+            <span class="pill">Hardware support</span>
+            <span class="pill">Audited code</span>
+          </div>
+          <p class="desc">A secure cryptocurrency custody solution featuring multi-signature authorizations, hardware wallet integration, and fully audited smart contract code for maximum asset safety.</p>
+        </article>
+
+        <article class="card praximous-pick" data-category="WebApps" data-status="Live">
+          <h3>Harmony Hub — Decentralized Social Platform</h3>
+          <div class="tagbar">
+            <span class="pill s-pick">Praximous Pick</span>
+            <span class="pill"><span class="status s-live">Live</span></span>
+            <span class="pill">P2P messaging</span>
+            <span class="pill">Content ownership</span>
+            <span class="pill">Modular feeds</span>
+          </div>
+          <p class="desc">A decentralized social platform emphasizing user control, peer-to-peer messaging, and true content ownership, offering a modular experience built for community. A foundational piece of digital sovereignty.</p>
+        </article>
+        <!-- Generated Project Cards End Here -->
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div>© Praximous — Sovereign Systems. Built with intent.</div>
+    </div>
+  </footer>
+
+  <div class="fab" id="printBtn">⎙ Print / Save PDF</div>
+
+  <script>
+    // Print/save functionality
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+  </script>
+</body>
+</html>
