@@ -105,6 +105,8 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 18px; position: relative; overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
     /* Specific glow for "Praximous Pick" */
     .card.praximous-pick {
@@ -130,6 +132,20 @@
       100% { background-position: 0% 50%; }
     }
 
+    @keyframes card-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card.anim-fade-in {
+      animation: card-fade-in 0.4s ease-out forwards;
+    }
 
     .card h3 { margin: 0 0 6px; font-size: 18px; }
     .pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--muted); }
@@ -174,6 +190,7 @@
     .kbd { font-family: "JetBrains Mono", monospace; font-size: 12px; opacity: .8; padding: 2px 6px; border: 1px solid var(--border); border-radius: 6px; }
     .mono { font-family: "JetBrains Mono", monospace; }
     .hr { height: 1px; background: linear-gradient(90deg, transparent, #222842, transparent); margin: 22px 0; }
+    .codex-desc { line-height: 1.6; }
 
     /* Floating radial action */
     .fab {
@@ -214,8 +231,8 @@
   <section id="projects">
     <div class="container">
       <div class="section-head">
-        <h2>The Codex of Systems</h2>
-        <p class="muted mono">44 projects shaping the sovereign future. Filter by category below.</p>
+        <p class="muted mono codex-desc">44 projects shaping the sovereign future. Filter by category below.</p>
+        <p class="muted mono codex-desc">44 projects shaping the sovereign future. Filter by category below.</p>
       </div>
 
       <div class="filters">
@@ -736,13 +753,18 @@
     document.getElementById('printBtn').addEventListener('click', () => window.print());
 
     // Project filtering
-    const filterContainer = document.querySelector('.filters');
-    const projectCards = document.querySelectorAll('#grid .card');
+    (function() {
+      const filterContainer = document.querySelector('.filters');
+      if (!filterContainer) return;
 
-    if (filterContainer) {
+      const projectCards = document.querySelectorAll('#grid .card');
+
       filterContainer.addEventListener('click', (event) => {
         const target = event.target;
         if (!target.matches('.filter-btn')) return;
+
+        // Prevent re-animating if the same filter is clicked
+        if (target.classList.contains('active')) return;
 
         filterContainer.querySelector('.active')?.classList.remove('active');
         target.classList.add('active');
@@ -751,14 +773,21 @@
 
         projectCards.forEach(card => {
           const cardCategory = card.dataset.category;
-          if (filter === 'all' || cardCategory === filter) {
+          const shouldShow = (filter === 'all' || cardCategory === filter);
+
+          card.classList.remove('anim-fade-in');
+
+          if (shouldShow) {
             card.style.display = 'flex';
+            // Use a tiny timeout to ensure the 'display' property is applied
+            // before the animation class is added, forcing the animation to trigger.
+            setTimeout(() => card.classList.add('anim-fade-in'), 10);
           } else {
             card.style.display = 'none';
           }
         });
       });
-    }
+    })();
   </script>
 </body>
 </html>
