@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>💎 Premium Roadmap — Praximous Ecosystem</title>
+  <meta name="description" content="Unlock the complete Praximous ecosystem documentation. Get in-depth guides, schematics, and commented code to accelerate your journey to digital sovereignty." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0b10;
+      --bg-2: #0e1017;
+      --ink: #e8f0ff;
+      --muted: #9aa4c2;
+      --glyph: #87f5d6;
+      --myth: #b38eff;
+      --brand: linear-gradient(135deg, #87f5d6 0%, #b38eff 35%, #ff8cbe 70%, #ffd070 100%);
+      --accent: #ff8cbe;
+      --card: #121422cc;
+      --border: #1b2030;
+      --good: #89ffa3;
+      --warn: #ffd070;
+      --danger: #ff7a7a;
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 800px at 70% -10%, rgba(179, 142, 255, .12), rgba(10,11,16,0)) ,
+                  radial-gradient(900px 600px at 10% 110%, rgba(135, 245, 214, .08), rgba(10,11,16,0)) ,
+                  var(--bg);
+      color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.6; /* Slightly more for readability */
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, 92vw); margin: 0 auto; }
+
+    /* --- NAV (Copied from index.html) ---------------------------------- */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(15,16,25,.8), rgba(15,16,25,.3));
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
+    .brand {
+      display: flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: .4px;
+      text-transform: uppercase; font-size: 14px;
+    }
+    .glyph { width: 26px; height: 26px; border-radius: 8px; background: var(--brand); box-shadow: var(--shadow); }
+    .nav-links { display: flex; gap: 14px; flex-wrap: wrap; }
+    .nav-links a { padding: 8px 12px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); font-weight: 600; }
+    .nav-links a:hover { color: var(--ink); border-color: #2a3148; }
+
+    /* --- HERO (Copied from index.html) ---------------------------------- */
+    .hero { position: relative; padding: 80px 0 50px; overflow: hidden; text-align: center; }
+    .grid-bg {
+      position: absolute; inset: 0; pointer-events: none; opacity: .3;
+      background-image: linear-gradient(#151a2a 1px, transparent 1px), linear-gradient(90deg, #151a2a 1px, transparent 1px);
+      background-size: 44px 44px;
+      -webkit-mask-image: radial-gradient(1000px 700px at 50% 0%, rgba(0,0,0,1), rgba(0,0,0,0));
+      mask-image: radial-gradient(1000px 700px at 50% 0%, rgba(0,0,0,1), rgba(0,0,0,0));
+    }
+    .glitch {
+      font-size: clamp(36px, 6vw, 78px);
+      font-weight: 900;
+      letter-spacing: .6px;
+      line-height: 1.05;
+      margin: 0 0 12px;
+      position: relative;
+      display: inline-block;
+    }
+    .glitch:after, .glitch:before {
+      content: attr(data-text);
+      position: absolute; inset: 0; filter: blur(.8px); opacity: .45; pointer-events: none;
+    }
+    .glitch:before { transform: translate(1px, 0); color: #87f5d6; mix-blend-mode: screen; }
+    .glitch:after { transform: translate(-1px, 0); color: #b38eff; mix-blend-mode: screen; }
+    .subtitle { color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: clamp(12px, 1.7vw, 15px); max-width: 65ch; margin: 0 auto; line-height: 1.6; }
+    .quote { margin-top: 16px; padding-left: 12px; border-left: 3px solid #2b3048; color: #c6cff5; font-style: italic; display: inline-block; }
+
+    .hero-actions { display: flex; justify-content: center; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
+    .btn { padding: 10px 16px; border-radius: 999px; border: 1px solid var(--border); font-weight: 700; display: inline-block; transition: all .2s ease; }
+    .btn.primary { background: var(--brand); color: #0b0b12; }
+    .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(179, 142, 255, .25); }
+    .btn.ghost { color: var(--ink); }
+
+    /* --- SECTION (Copied from index.html) ------------------------------- */
+    section { padding: 56px 0; }
+    .section-head { text-align: center; margin-bottom: 32px; }
+    h2 { font-size: clamp(28px, 4vw, 42px); margin: 0 0 8px; }
+    .section-head p { color: var(--muted); font-size: 18px; max-width: 70ch; margin: 0 auto; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+    .card {
+      background: radial-gradient(600px 300px at 30% -10%, rgba(135,245,214,.08), transparent 60%),
+                  radial-gradient(600px 300px at 130% 120%, rgba(179,142,255,.07), transparent 60%),
+                  var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px; position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .card h3 { margin: 0 0 12px; font-size: 20px; }
+    .card .desc { color: #cdd6ff; margin-top: 8px; font-size: 15px; line-height: 1.5; flex-grow: 1; }
+    .card-icon { font-size: 32px; margin-bottom: 12px; }
+
+    /* --- VALUE PROPS SECTION -------------------------------------------- */
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      margin-top: 40px;
+    }
+    .value-item h4 { font-size: 18px; margin: 0 0 4px; }
+    .value-item p { margin: 0; color: var(--muted); }
+
+    /* --- CTA SECTION ---------------------------------------------------- */
+    .cta-section {
+      text-align: center;
+      background: var(--bg-2);
+      padding: 60px 24px;
+      margin-top: 60px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .cta-section .btn {
+      padding: 14px 32px;
+      font-size: 18px;
+      margin-top: 24px;
+    }
+
+    /* --- FOOTER (Copied from index.html) -------------------------------- */
+    footer { padding: 40px 0 80px; color: var(--muted); text-align: center; border-top: 1px dashed #222842; margin-top: 40px; }
+    .footer-note { margin-top: 8px; }
+    .footer-note-alt { margin-top: 8px; }
+
+    /* --- UTILITIES (Copied from index.html) ----------------------------- */
+    .mono { font-family: "JetBrains Mono", monospace; }
+    .hr { height: 1px; background: linear-gradient(90deg, transparent, #222842, transparent); margin: 60px 0; }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand"><span class="glyph"></span> Praximous Ecosystem</a>
+      <nav class="nav-links">
+        <a href="index.html#projects">Projects</a>
+        <a href="https://github.com/TheGiblet" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="grid-bg"></div>
+      <div class="container">
+        <h1 class="glitch" data-text="The Architect's Vault">The Architect's Vault</h1>
+        <div class="subtitle">Go beyond the public repos. Unlock the complete Praximous documentation, premium roadmaps, and the philosophy behind the code.</div>
+        <div class="hero-actions">
+          <a class="btn primary" href="https://patreon.com/praximous" target="_blank" rel="noopener noreferrer">Unlock Access on Patreon</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="content">
+      <div class="container">
+
+        <div class="section-head">
+          <h2>What's Inside the Vault?</h2>
+          <p>This is more than just documentation; it's a masterclass in sovereign system design. You get the complete, unabridged blueprint to the entire Praximous Ecosystem.</p>
+        </div>
+
+        <div class="card-grid">
+          <article class="card">
+            <div class="card-icon">📖</div>
+            <h3>In-Depth Guides & Philosophy</h3>
+            <p class="desc">Move beyond the README. Access detailed architectural breakdowns, the 'why' behind design decisions, and step-by-step tutorials for core projects like <strong>ForgeMind</strong> and <strong>Praxis</strong>.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">⚙️</div>
+            <h3>Complete Schematics & Diagrams</h3>
+            <p class="desc">Visualize the architecture. Get full, high-resolution schematics for robotics projects like <strong>Johnny 5</strong>, and system diagrams for complex software like the <strong>Truth Decay Engine</strong>.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">👨‍💻</div>
+            <h3>Heavily Commented Source Code</h3>
+            <p class="desc">Learn from the source. Gain access to private repository branches with line-by-line comments explaining the logic, trade-offs, and advanced techniques used in the code.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🗺️</div>
+            <h3>Premium Project Roadmaps</h3>
+            <p class="desc">See the future of the ecosystem. Get an exclusive look at the detailed feature roadmaps, conceptual designs, and experimental plans for projects like <strong>Stellara</strong> and <strong>Countertype</strong>.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">💬</div>
+            <h3>Direct Support & Community</h3>
+            <p class="desc">Join a private Discord channel for patrons. Ask questions directly, get support on your own sovereign projects, and collaborate with a community of dedicated builders.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">🔬</div>
+            <h3>Research & Prototypes</h3>
+            <p class="desc">Explore the bleeding edge. Access research notes, early-stage prototypes, and failed experiments that provide invaluable lessons not found in the final, polished code.</p>
+          </article>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="section-head">
+          <h2>From Consumer to Creator</h2>
+          <p>The value isn't just in the files; it's in the transformation of your skills and mindset. This is an investment in your craft.</p>
+        </div>
+
+        <div class="value-grid">
+          <div class="value-item">
+            <h4>🚀 Accelerate Your Learning Curve</h4>
+            <p>Stop reverse-engineering. Learn advanced concepts in AI, robotics, and system design from a fully-documented, real-world ecosystem. Save hundreds of hours of guesswork.</p>
+          </div>
+          <div class="value-item">
+            <h4>💡 Build with Confidence</h4>
+            <p>Move from theory to practice with proven blueprints. Reduce wasted time, avoid common pitfalls, and build with the confidence of a seasoned architect.</p>
+          </div>
+          <div class="value-item">
+            <h4>🌀 Master the Philosophy</h4>
+            <p>This isn't just about code; it's about a new way of thinking. Internalize the principles of modularity, digital sovereignty, and ritual design to elevate your work.</p>
+          </div>
+          <div class="value-item">
+            <h4>🏆 Gain a Competitive Edge</h4>
+            <p>The knowledge within the vault is a fraction of the cost of a university course or a professional workshop, but the practical, applicable wisdom is immeasurable.</p>
+          </div>
+        </div>
+
+        <div class="cta-section">
+          <h2>Begin the Ritual.</h2>
+          <p class="subtitle">The journey of sovereignty begins with a single, conscious decision to build rather than consume. By becoming a patron, you are not just buying documents; you are supporting a philosophy of open, empowering technology.</p>
+          <a class="btn primary" href="https://patreon.com/praximous" target="_blank" rel="noopener noreferrer">Get Full Access on Patreon</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-note-alt">© Praximous — Sovereign Systems. Built with intent.</div>
+      <div class="footer-note-alt">© Praximous — Sovereign Systems. Built with intent.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

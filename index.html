@@ -92,8 +92,8 @@
 
     /* --- SECTION -------------------------------------------------------- */
     section { padding: 56px 0; }
-    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
-    h2 { font-size: clamp(22px, 3.8vw, 34px); margin: 0; }
+    .section-head { text-align: center; margin-bottom: 24px; }
+    h2 { font-size: clamp(28px, 4vw, 42px); margin: 0 0 8px; }
     .section-head .muted { color: var(--muted); }
 
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
@@ -144,8 +144,28 @@
     .s-experimental { color: var(--danger); }
     .s-pick { background: linear-gradient(90deg, #ff8cbe, #b38eff); color: #0b0b12; font-weight: bold; }
 
-
-    /* FILTERS - removed as requested for static HTML */
+    /* --- FILTERS -------------------------------------------------------- */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 32px;
+      justify-content: center;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s ease;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .filter-btn:hover { color: var(--ink); border-color: #2a3148; background-color: var(--bg-2); }
+    .filter-btn.active { color: #0b0b12; background: var(--brand); border-color: transparent; font-weight: 700; }
 
     /* Footer */
     footer { padding: 40px 0 80px; color: var(--muted); text-align: center; border-top: 1px dashed #222842; margin-top: 40px; }
@@ -194,8 +214,18 @@
   <section id="projects">
     <div class="container">
       <div class="section-head">
-        <h2>🜁 The Codex of Systems</h2>
-        <div class="muted mono">36 projects, shaping the sovereign future.</div>
+        <h2>The Codex of Systems</h2>
+        <p class="muted mono">44 projects shaping the sovereign future. Filter by category below.</p>
+      </div>
+
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All Projects (44)</button>
+        <button class="filter-btn" data-filter="AI">AI (8)</button>
+        <button class="filter-btn" data-filter="Robotics">Robotics (6)</button>
+        <button class="filter-btn" data-filter="DevTools">DevTools (8)</button>
+        <button class="filter-btn" data-filter="Gaming">Gaming (6)</button>
+        <button class="filter-btn" data-filter="Finance">Finance (8)</button>
+        <button class="filter-btn" data-filter="WebApps">WebApps (8)</button>
       </div>
 
       <div class="card-grid" id="grid">
@@ -704,6 +734,31 @@
   <script>
     // Print/save functionality
     document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    // Project filtering
+    const filterContainer = document.querySelector('.filters');
+    const projectCards = document.querySelectorAll('#grid .card');
+
+    if (filterContainer) {
+      filterContainer.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!target.matches('.filter-btn')) return;
+
+        filterContainer.querySelector('.active')?.classList.remove('active');
+        target.classList.add('active');
+
+        const filter = target.dataset.filter;
+
+        projectCards.forEach(card => {
+          const cardCategory = card.dataset.category;
+          if (filter === 'all' || cardCategory === filter) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    }
   </script>
 </body>
 </html>
