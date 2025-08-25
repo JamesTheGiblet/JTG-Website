@@ -88,7 +88,9 @@
     .hero-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
     .btn { padding: 10px 16px; border-radius: 999px; border: 1px solid var(--border); font-weight: 700; }
     .btn.primary { background: var(--brand); color: #0b0b12; }
+    .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(179, 142, 255, .25); transition: all .2s ease; }
     .btn.ghost { color: var(--ink); }
+    .btn.ghost:hover { background-color: var(--bg-2); transition: background-color .2s ease; }
 
     /* --- SECTION -------------------------------------------------------- */
     section { padding: 56px 0; }
@@ -209,9 +211,10 @@
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <div class="brand"><span class="glyph"></span> Praximous Ecosystem</div>
+      <a href="index.html" class="brand"><span class="glyph"></span> Praximous Ecosystem</a>
       <nav class="nav-links">
         <a href="#projects">Projects</a>
+        <a href="roadmap.html" title="Unlock The Architect's Vault">💎 Premium</a>
       </nav>
     </div>
   </header>
@@ -223,7 +226,8 @@
       <div class="subtitle">A curated collection by <strong>James ‘The Giblet’ Mavric</strong>.</div>
       <p class="quote">“The grid remembers. The trail reveals. The builder endures.”</p>
       <div class="hero-actions">
-        <a class="btn primary" href="#projects">View All Repositories</a>
+        <a class="btn primary" href="#projects">Explore Projects</a>
+        <a class="btn ghost" href="roadmap.html">Unlock The Architect's Vault</a>
       </div>
     </div>
   </section>
@@ -231,7 +235,7 @@
   <section id="projects">
     <div class="container">
       <div class="section-head">
-        <p class="muted mono codex-desc">44 projects shaping the sovereign future. Filter by category below.</p>
+        <h2>The Codex of Systems</h2>
         <p class="muted mono codex-desc">44 projects shaping the sovereign future. Filter by category below.</p>
       </div>
 
